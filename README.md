@@ -1,68 +1,45 @@
-# DNTRG
+# iDNTR
 Secondary development based on DNTR, Gmsh &amp; ParaView. (Desensitization)
-
-### 1. *transmsh.py*
+---
 
 1. **预期功能**
 
    - 给定文件路径，读入并结构化*.msh文件
-   - 转换为ANSYS的*.dat文件
+   - 将网格数据转换为ANSYS格式的xy.dat和ii.dat文件
+   - 读取用户输入的INPUT.DAT文件，与网格进行校对
+   - 运行DNTR程序，读取OUTPUT.DAT文件
+   - 将通量分布数据转换为*.vtk文件
    - 利用setting.json文件进行脚本设置
-   - 记录日志文件
+   - ~~记录日志文件~~
      - 时间
      - 文件名
      - 错误类型
+---
 
 2. **实现方法**
 
-   - 读入文件
+   - 读入msh文件
 
      - 文件格式：Gmsh - *.msh
-     - **?** gmsh-sdk的gmsh python API ? https://www.cnpython.com/qa/300042
+     - ~~gmsh-sdk的gmsh python API ? https://www.cnpython.com/qa/300042~~
+     - ~~自行编写msh格式读取函数~~已编写，但出于简洁性考虑在released版本中弃用
+     - 利用meshio读取
 
-   - 改写文件
+   - 改写dat文件
 
      - 文件格式：Ansys - *.dat
+     - 根据算例文件推测数据结构，自行编写
 
-   - setting.json配置文件
+   - 读取INPUT.DAT文件和OUTPUT.DAT文件
+      
+      - 根据算例文件推测数据结构，自行编写
+      
+   - 改写vtk文件
+   
+      - 利用meshio的cell_data参数写入
 
-     - 内置库 json
-
-     - 编码函数 json.dumps()
-
-       ``````python
-       import json
-       
-       json.dumps(obj, skipkey=False, ensure_ascii=True, indent=0, separators=(item_separator=',', dict_separator=':'), encoding='utf-8', sort_keys=False)
-        
-       # 参数含义：
-       # obj:需转换为json的对象，为python内置数据结构，内置数据会按照对应法则转换为js数据结构，如(list, tuple)->array
-       # skipkey:若为True，则遇到非python内置数据类型的对象时报错TypeError；若为Fasle，则跳过之
-       # ensure_ascii:若为True，遇到非ascii编码时显示为u\xxxx
-       # indent:若为0，在不换行；若不为0，则每个对象换行，且缩进为indent值
-       # separators:对象分隔符，键值对分隔符
-       # encoding:编码
-       # sort_keys:是否按键排序
-       ``````
-
-     - 解码函数 json.loads()
-
-       ```python
-       json.loads(obj)
-       # obj:需转换为python内置数据类型的json数据
-       ```
-
-   - 日志模块
-
-     - 内置库 logging
-
-       ```python
-       import logging
-       
-       # 日志级别
-       ```
-
-    - 其他
+   - ~~setting.json配置文件~~
+---
 
 3. **文件格式**
 
@@ -170,8 +147,10 @@ Secondary development based on DNTR, Gmsh &amp; ParaView. (Desensitization)
          
      	...
      ```
-
-     
-
-***To be continued ...***
-
+---
+### References
+[1] DNTR
+[2] Gmsh
+[3] ParaView
+[4] MSH File Format
+[5] VTK File Formats
